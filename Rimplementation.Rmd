@@ -1,0 +1,72 @@
+---
+title: "Boston SER Talk code"
+output: html_notebook
+---
+R Implementation -
+Introduction to Parametric & Semi-parametric Estimators for Causal Inference
+Laura Balzer & Jennifer Ahern September 28, 2018
+
+
+During the workshop, we will complete this R exercise together. After the workshop, an answer key will be distributed.
+
+
+Make sure libraries are loaded
+```{r LOAD Libraries}
+library(SuperLearner)
+library(ltmle)
+
+
+```
+
+Load the data set CausalWorkshop.csv and assign it to object data.
+```{r DATA IMPORT}
+workshop = read.csv("/Volumes/GoogleDrive/My Drive/Edu/Epi PhD/Epidemiology/Talks Conferences and Seminars/SER/Boston 2018/DAT/CausalWorkshop.csv")
+```
+
+```{r Examine data}
+#### Shows #Rows   #Col  ####
+dim(data)
+```
+
+## Data Dictionary 
+The observed data consist of the following variables
+- W 1: Binary baseline covariate (values 0 and 1)
+- W 2: Continuous baseline covariate (range from 0 to 1) - W 3: Continuous baseline covariate (centered at 0)
+- W 4: Continuous baseline covariate (centered at 0)
+- A: The exposure (1 for exposed; 0 for unexposed)
+- Y : The outcome (range from 0 to 1).
+
+```{r Setting the seed}
+set.seed(1)
+```
+
+```{r STEP 1 -- Estimate the conditional mean outcome with parametric regression}
+## Parametric G-computation
+outcome.regression<- glm(Y~A+W1+W2+W3+W4, family='binomial', data=workshop)
+
+summary(outcome.regression)
+```
+
+### Next, we obtain the expected (predicted) outcome for each observation under the exposure and given the covariates Eˆ(Y|A = 1,W) as well as the expected (predicted) outcome for each observation under no exposure and given the covariates Eˆ (Y |A = 0, W ).
+
+(a) Copy the data set data into two new data frames data.txt and data.untxt. Then set all units in data.txt to be treated/exposed (A=1) and all units in data.untxt to be untreated/unexposed (A=0). The columns of a data frame can be accessed with the $ operator.
+
+```{r Fitted regression to obtain predicted outcomes}
+# copying the observed data
+data.txt<- data.untxt <- workshop
+# set A=1 in the data.txt and A=0 in data.untxt
+data.txt$A <-1
+data.untxt$A <- 0
+# Verify with the colMeans function (which takes the mean in each data column)
+colMeans(data.txt)
+colMeans(data.untxt)
+```
+
+(b) Use the predict function to get the expected outcome for each observation i given the exposure and its covariates Eˆ(Yi|Ai = 1, Wi).
+
+```{r}
+predict.outcome.txt = predict(outcome.regression, newdata=data.txt, type='response')
+
+```
+
+

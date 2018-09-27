@@ -1,0 +1,28 @@
+---
+title: "Boston SER Talk setup"
+output: html_notebook
+---
+
+workshop “Introduction to Parametric and Semi-parametric Estimators for Causal Inference”
+Depdendencies:
+1. Install SuperLearner [Polley et al., 2018]
+2. Install "ltmle" [Lendle et al., 2017]
+
+
+
+```{r INSTALL PACKAGES}
+install.packages("SuperLearner", dependencies = TRUE)
+install.packages("ltmle", dependencies = TRUE)
+```
+
+```{r LOAD Libraries}
+library(SuperLearner)
+library(ltmle)
+
+
+```
+
+```{r DATA IMPORT}
+workshop = read.csv("/Volumes/GoogleDrive/My Drive/Edu/Epi PhD/Epidemiology/Talks Conferences and Seminars/SER/Boston 2018/DAT/CausalWorkshop.csv")
+```
+
